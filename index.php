@@ -4,50 +4,14 @@ session_start();
 if(!empty($_SESSION['user'])):
     header('location:espace.php');
 else:
-
-    //on se connecte a la base de données
-    $bdd = new PDO('mysql:host=localhost:3308;dbname=cloud','root','');
-
-    //lorsqu'on clique sur submit
-    if(   isset(   $_POST['connexion'])   ){
-
-        //On recupère dans une variable l'identifiant et le mdp, et on securise (eviter l'injection SQL + chiffrage du mdp)
-        $user = htmlspecialchars($_POST['user']);
-        $password    = sha1($_POST['password']);
-
-        //On verifie que les champs soient rempli
-        if(  !empty($_POST['user'])   &&   !empty($_POST['password'])  ){
-
-            // On compare l'identifiant et le mdp saisi avec ceux de la base de données
-            $reqidentification = $bdd->query("SELECT * FROM membres WHERE identifiant_membre = '$user' AND mdp_membre = '$password'");
-            $tableau = $reqidentification->fetch(PDO::FETCH_ASSOC);
-
-            if(is_array($tableau)){
-                $_SESSION['user']=$tableau['prenom_membre'];
-                echo "redirection vers votre espace membre";
-                header('location:espace.php');
-            }
-
-            else{
-                $erreur = "identifiant incorrect";
-            }
-
-        }
-
-        else{
-            //si les champs ne sont pas tous rempli
-            $erreur = "tous les champs doivent être rempli";
-        }
-    }
+    include "fonction.php";
+    connexion();
 endif;
 ?>
 
 
 
-
-
-
-<h2>Connectez vous pour acceder a votre espace</h2>
+<h2>iterface de connexion</h2>
 
 <form method="post">
 
