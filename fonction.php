@@ -1,9 +1,13 @@
 <?php
 
+function connectBDD(){
+    return new PDO('mysql:host=localhost;dbname=cloud','root','root');
+}
+
 function inscription(){
     
     //on se connecte a la base de données
-    $bdd = new PDO('mysql:host=localhost:3308;dbname=cloud','root','');
+    $bdd = connectBDD();
 
     //si on clique sur le bouton "je m'inscris"
     if(   isset(   $_POST['inscription']   )   ){
@@ -38,14 +42,14 @@ function inscription(){
                             if(filter_var($mail, FILTER_VALIDATE_EMAIL)){
 
                                 //On verifie que l'identifiant ne soit pas deja utilisé
-                                $reqid = $bdd->prepare("SELECT * FROM membres WHERE identifiant_membre = ?");
+                                $reqid = $bdd->prepare("SELECT * FROM membres_cloud WHERE identifiant_membre = ?");
                                 $reqid->execute(array($identifiant));
                                 $idexist = $reqid->rowCount();
 
                                 if($idexist == 0){
                                     
                                     //on insert les données dans la table "user"
-                                    $insertmbr = $bdd->prepare("INSERT INTO membres(nom_membre, prenom_membre, tel_membre, mail_membre, naissance_membre, identifiant_membre, mdp_membre) VALUES(?,?,?,?,?,?,?)");
+                                    $insertmbr = $bdd->prepare("INSERT INTO membres_cloud(nom, prenom, tel, mail, naissance, identifiant, mdp) VALUES(?,?,?,?,?,?,?)");
                                     $insertmbr->execute(array($nom, $prenom, $tel, $mail, $naissance, $identifiant, $mdp));
                                 
                                     //On redirige automatiquement vers index.php et on crée un dossier au nom de l'user
@@ -102,7 +106,7 @@ function inscription(){
 
 function connexion(){
      //on se connecte a la base de données
-     $bdd = new PDO('mysql:host=localhost:3308;dbname=cloud','root','');
+     $bdd = connectBDD();
 
      //lorsqu'on clique sur submit
      if(   isset(   $_POST['connexion'])   ){
@@ -115,12 +119,12 @@ function connexion(){
          if(  !empty($_POST['user'])   &&   !empty($_POST['password'])  ){
  
              // On compare l'identifiant et le mdp saisi avec ceux de la base de données
-             $reqidentification = $bdd->query("SELECT * FROM membres WHERE identifiant_membre = '$user' AND mdp_membre = '$password'");
+             $reqidentification = $bdd->query("SELECT * FROM membres_cloud WHERE identifiant = '$user' AND mdp = '$password'");
              $tableau = $reqidentification->fetch(PDO::FETCH_ASSOC);
  
              if(is_array($tableau)){
-                 $_SESSION['user']=$tableau['prenom_membre'];
-                 $_SESSION['identifiant'] = $tableau['identifiant_membre'];
+                 $_SESSION['user']=$tableau['prenom'];
+                 $_SESSION['identifiant'] = $tableau['identifiant'];
                  echo "redirection vers votre espace membre";
                  header('location:espace.php');
              }

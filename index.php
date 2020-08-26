@@ -11,7 +11,7 @@ endif;
 
 
 
-<h2>iterface de connexion</h2>
+<h2>interface de connexion</h2>
 
 <form method="post">
 
@@ -22,12 +22,12 @@ endif;
     <input type="password" name="password" placeholder="votre mot de passe"><br><br>
 
     <input type="submit" value="Je me connecte" name="connexion">
-    <?php if(!empty($erreur)){echo"<p class='erreur'>".$erreur."</p>";}?>
+    <?php if(!empty($erreur)){echo "<p class='erreur'>".$erreur."</p>";}?>
 
 </form>
 
 <p>vous n'avez pas de compte ? <a href="inscription.php">inscrivez-vous</a> </p>
-
+ <a href="explorer.php">VOTRE CLOUD</a>
 
 <style>
 *{text-align:center;}
